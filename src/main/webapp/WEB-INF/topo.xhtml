@@ -1,0 +1,49 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<!-- TOPO START -->
+	<h:form prependId="false">
+		<h:panelGroup styleClass="ui-sm-12 ui-g" style="border:none !important;">
+			<h:panelGroup styleClass="ui-sm-12 ui-g-3">
+				<a href="#{url}"><h:graphicImage name="logo_easybook.png" library="utils" style="width:68%" /></a>
+			</h:panelGroup>
+			<h:panelGroup styleClass="ui-sm-12 ui-g-7">
+				<div class="navbar-header" style="margin-left: 25%;">
+					<!-- 					<h1 style="color: #2399e5">#{titulo}</h1> -->
+					<h:outputText style="color: #2399e5; font-size:30px;" value="#{titulo}" />
+				</div>
+			</h:panelGroup>
+			<h:panelGroup styleClass="ui-sm-12 ui-g-2">
+				<h:panelGroup styleClass="ui-sm-12 ui-g-12">
+					<h:panelGroup styleClass="ui-sm-12 ui-g">
+						<a href="#{url}/view/usuario-form.xhtml?id=#{sessionContext.usuarioLogado.id}" class="pmLinkFs13"> 
+						<i class="fa fa-user fa-lg" style="color: #339af0;" /> <p:outputLabel value=" #{sessionContext.usuarioLogado.nomeCompleto}" />
+						</a>
+					</h:panelGroup>
+					<p:separator />
+					<h:panelGroup styleClass="ui-sm-12 ui-g">
+						<a href="#{url}/view/tela-pagamento.xhtml" class="pmLinkFs13"> <i class="fa fa-shopping-cart fa-lg" style="color: #339af0;" /> <p:outputLabel
+								value=" Carrinho" />
+						</a>
+					</h:panelGroup>
+					<p:separator />
+					<h:panelGroup styleClass="ui-sm-12 ui-g">
+						<a onclick="rcKillSession()" href="#{url}/view/login.xhtml" class="pmLinkFs13"> <i class="fa fa-sign-out fa-lg" style="color: #339af0;" />
+							<p:outputLabel value=" Logout" />
+						</a>
+					</h:panelGroup>
+					<p:separator />
+					<h:panelGroup styleClass="ui-sm-12 ui-g">
+						<a href="#{url}/" class="pmLinkFs13"> 
+							<i class="fa fa-home fa-lg" style="color: #339af0;"/>
+							<p:outputLabel value=" Home" />
+						</a>
+					</h:panelGroup>
+					<p:remoteCommand name="rcKillSession" actionListener="#{sessionContext.killSession()}" />
+				</h:panelGroup>
+			</h:panelGroup>
+		</h:panelGroup>
+	</h:form>
+	<!-- TOPO END -->
+
+</ui:composition>

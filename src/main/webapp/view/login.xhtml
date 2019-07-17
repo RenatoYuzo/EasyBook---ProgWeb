@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui" xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<ui:param name="url" value="#{request.contextPath}" />
+	<f:facet name="first">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+	</f:facet>
+	<title>EasyBook - Login</title>
+	<h:outputStylesheet library="easybook" name="css/login.css" />
+	<h:outputStylesheet library="easybook" name="css/core-layout.css" />
+	<h:outputStylesheet library="easybook" name="css/font-awesome.css" />
+</h:head>
+
+<h:body>
+	<h:form id="form-login" prependId="true">
+		<p:outputPanel styleClass="EmptyBox50"></p:outputPanel>
+		<p:outputPanel styleClass="Wid25 MarAuto DispBlock OvHidden Responsive100">
+			<p:outputPanel styleClass="ContainerIndent">
+				<p:outputPanel styleClass="Wid90 MarAuto">
+					<p:outputPanel styleClass="Wid100 TexAlCenter">
+						<a href="#{url}"><h:graphicImage library="utils" name="logo_easybook.png" style="width:280px;" /></a>
+						<p:outputPanel styleClass="EmptyBox30"></p:outputPanel>
+					</p:outputPanel>
+					<p:panel styleClass="BordRad15">
+						<p:outputPanel styleClass="EmptyBox10"></p:outputPanel>
+
+						<p:messages id="msg" closable="true">
+							<p:autoUpdate disabled="false" />
+						</p:messages>
+
+						<p:outputPanel styleClass="ui-fluid ui-g-12">
+
+							<p:outputPanel styleClass="EmptyBox20"></p:outputPanel>
+
+							<p:outputLabel value="Usuário" for="username" styleClass="FontBold" />
+							<p:inputText id="username" tabindex="2" placeholder="Usuário" styleClass="TexAlCenter Fs12" required="true" requiredMessage="Informe o usuário"
+								value="#{loginController.login}" />
+
+							<p:outputPanel styleClass="EmptyBox20"></p:outputPanel>
+
+							<p:outputLabel value="Senha" for="password" styleClass="FontBold" />
+							<p:inputText type="password" id="password" placeholder="Senha" tabindex="3" styleClass="Wid97 TexAlCenter Fs12" required="true"
+								requiredMessage="Informe a senha" value="#{loginController.senha}" />
+
+							<p:outputPanel styleClass="EmptyBox20"></p:outputPanel>
+
+						</p:outputPanel>
+
+						<p:outputPanel styleClass="TexAlCenter">
+							<p:outputPanel styleClass="EmptyBox10"></p:outputPanel>
+							<p:commandButton value="Entrar" icon="fa fa-sign-in Fs18" style="width:135px !important;" disabled="false" widgetVar="btn-entrar"
+								onclick="PF('btn-entrar').disable()" oncomplete="PF('btn-entrar').enable()" tabindex="6" action="#{loginController.actionAutenticar()}"
+								id="btn-entrar" update="@form" process="@form" />
+
+							<p:outputPanel class="EmptyBox10"></p:outputPanel>
+							<p:clock pattern="dd/MM/yyyy HH:mm:ss" mode="server" />
+							<p:outputPanel class="EmptyBox10"></p:outputPanel>
+						</p:outputPanel>
+					</p:panel>
+					<p:outputPanel styleClass="EmptyBox10"></p:outputPanel>
+					<p:outputPanel styleClass="TexAlCenter white Fs14">
+						<h:outputText value="Copyright " style="color:black;" />
+						<i class="fa fa-copyright" style="color: black;"></i>
+						<h:outputText styleClass="white" style="color:black;" value=" 2019 EasyBook - Todos os direitos reservados." />
+					</p:outputPanel>
+				</p:outputPanel>
+			</p:outputPanel>
+		</p:outputPanel>
+
+		<h:form>
+			<p:ajaxStatus onstart="PF('statusDialog').show();" onsuccess="PF('statusDialog').hide();" />
+
+			<p:dialog modal="false" widgetVar="statusDialog" header="Status" draggable="false" closable="false" showHeader="false" resizable="false">
+				<h:graphicImage library="utils" name="loading03.gif" />
+			</p:dialog>
+		</h:form>
+
+	</h:form>
+</h:body>
+
+</html>

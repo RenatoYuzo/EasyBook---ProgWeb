@@ -1,0 +1,153 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui" xmlns:c="http://java.sun.com/jsp/jstl/core"
+	template="/WEB-INF/template.xhtml">
+
+	<ui:param name="titulo" value="Cadastro de Ebook" />
+
+	<ui:define name="corpo">
+
+		<f:metadata>
+			<f:viewParam name="id" value="#{ebookFormController.ebook}" converter="#{entityConverter}" />
+		</f:metadata>
+		<f:event listener="#{ebookFormController.onload}" type="preRenderView" />
+
+		<h:form>
+			<p:growl id="growl" showDetail="true" sticky="true">
+				<p:autoUpdate />
+			</p:growl>
+
+			<p:fieldset legend="Cadastro de Ebook" style="margin-bottom:30px">
+				<h:panelGroup styleClass="ui-sm-12 ui-g">
+					<h:panelGroup styleClass="ui-sm-12 ui-g-7">
+						<p:inputText placeholder="Título" style="width:100%" value="#{ebookFormController.titulo}" />
+					</h:panelGroup>
+				</h:panelGroup>
+
+				<h:panelGroup styleClass="ui-sm-12 ui-g">
+					<h:panelGroup styleClass="ui-sm-12 ui-g-7">
+						<p:inputText placeholder="Editora" style="width:100%" value="#{ebookFormController.editora}" />
+					</h:panelGroup>
+				</h:panelGroup>
+
+				<h:panelGroup styleClass="ui-sm-12 ui-g">
+					<h:panelGroup styleClass="ui-sm-12 ui-g-7">
+						<p:textEditor widgetVar="editorResumo" value="#{ebookFormController.resumo}" height="180" style="width:100%"
+							placeholder="Escreva seu resumo aqui..">
+							<f:facet name="toolbar">
+								<span class="ql-formats">
+									<button class="ql-bold"></button>
+									<button class="ql-italic"></button>
+									<button class="ql-underline"></button>
+									<button class="ql-strike"></button>
+								</span>
+								<span class="ql-formats"> <select class="ql-font"></select> <select class="ql-size"></select>
+								</span>
+							</f:facet>
+						</p:textEditor>
+					</h:panelGroup>
+				</h:panelGroup>
+
+				<h:panelGroup styleClass="ui-sm-12 ui-g">
+					<h:panelGroup styleClass="ui-sm-12 ui-g-7">
+						<p:inputMask mask="9999" placeholder="Ano de publicação" style="width:100%" value="#{ebookFormController.ano}" />
+					</h:panelGroup>
+				</h:panelGroup>
+
+				<h:panelGroup styleClass="ui-sm-12 ui-g">
+					<h:panelGroup styleClass="ui-sm-12 ui-g-7">
+						<p:inputText placeholder="Autor" style="width:100%" value="#{ebookFormController.autor}" />
+					</h:panelGroup>
+				</h:panelGroup>
+
+				<h:panelGroup styleClass="ui-sm-12 ui-g">
+					<h:panelGroup styleClass="ui-sm-12 ui-g-7">
+						<p:inputText placeholder="Gênero" style="width:100%" value="#{ebookFormController.genero}" />
+					</h:panelGroup>
+				</h:panelGroup>
+				
+				<h:panelGroup styleClass="ui-sm-12 ui-g">
+					<h:panelGroup styleClass="ui-sm-12 ui-g-7">
+						<p:inputMask mask="99.99" placeholder="Preço" style="width:100%" value="#{ebookFormController.preco}" />
+					</h:panelGroup>
+				</h:panelGroup>
+
+				<h:panelGroup styleClass="ui-sm-12 ui-g">
+					<h:panelGroup styleClass="ui-sm-12 ui-g-7">
+						<p:fileUpload label="Escolher" uploadLabel="Anexar PDF" cancelLabel="Cancelar" sequential="true" update="listaAnexados"
+							fileUploadListener="#{ebookFormController.actionAnexarPDF}" mode="advanced" dragDropSupport="true" fileLimit="1"
+							fileLimitMessage="Somente um arquivo pode ser submetido." />
+					</h:panelGroup>
+				</h:panelGroup>
+
+				<div class="ui-sm-12 ui-g">
+					<div class="ui-sm-12 ui-g-7">
+						<p:dataList id="listaAnexados" value="#{ebookFormController.listPdf}" var="pdf" type="unordered" itemType="none" style="margin-top:-16px;"
+							emptyMessage="Ao anexar em ebook, não se esqueça de apertar o botão cadastrar.">
+							<p:panelGrid columns="2" styleClass="ui-panelgrid-blank">
+								<p:commandLink style="float:left;margin-right:10px;margin-top:3px;color:#333333" action="#{ebookFormController.actionExcluirPDFAnexado(pdf)}"
+									update="listaAnexados">
+									<p:commandButton icon="fa fa-trash" />
+								</p:commandLink>
+								<h:outputText value="#{pdf}" style="display:inline-block" />
+							</p:panelGrid>
+						</p:dataList>
+					</div>
+				</div>
+
+				<h:panelGroup styleClass="ui-sm-12 ui-g">
+					<h:panelGroup styleClass="ui-sm-12 ui-g-7">
+						<p:fileUpload label="Escolher" uploadLabel="Anexar Imagem" cancelLabel="Cancelar" sequential="true" update="listaImgAnexados"
+							fileUploadListener="#{ebookFormController.actionAnexarIMG}" mode="advanced" dragDropSupport="true" fileLimit="1"
+							fileLimitMessage="Somente um arquivo pode ser submetido." />
+					</h:panelGroup>
+				</h:panelGroup>
+
+				<div class="ui-sm-12 ui-g">
+					<div class="ui-sm-12 ui-g-7">
+						<p:dataList id="listaImgAnexados" value="#{ebookFormController.listImg}" var="img" type="unordered" itemType="none" style="margin-top:-16px;"
+							emptyMessage="Ao anexar uma imagem, não se esqueça de apertar o botão cadastrar.">
+							<p:panelGrid columns="2" styleClass="ui-panelgrid-blank">
+								<p:commandLink style="float:left;margin-right:10px;margin-top:3px;color:#333333" action="#{ebookFormController.actionExcluirImgAnexado(pdf)}"
+									update="listaImgAnexados">
+									<p:commandButton icon="fa fa-trash" />
+								</p:commandLink>
+								<h:outputText value="#{img}" style="display:inline-block" />
+							</p:panelGrid>
+						</p:dataList>
+					</div>
+				</div>
+
+				<h:panelGroup styleClass="ui-sm-12 ui-g">
+					<h:panelGroup styleClass="ui-sm-12 ui-g-7">
+						<p:commandButton value="Cadastrar" icon="fa fa-user-plus" actionListener="#{ebookFormController.actionCadastrar()}"
+							rendered="#{ebookFormController.id eq null}" />
+						<p:commandButton value="Atualizar" icon="fa fa-save" actionListener="#{ebookFormController.actionAtualizar()}"
+							rendered="#{ebookFormController.id ne null}" />
+					</h:panelGroup>
+				</h:panelGroup>
+
+
+				<!-- 				<h:panelGroup styleClass="ui-sm-12 ui-g"> -->
+				<!-- 					<h:panelGroup styleClass="ui-sm-12 ui-g-7"> -->
+				<!-- 						<p:textEditor widgetVar="editor1" value="#{ebookFormController.genero}" style="margin-bottom:10px"> -->
+				<!-- 							<f:facet name="toolbar"> -->
+				<!-- 								<span class="ql-formats"> -->
+				<!-- 									<button class="ql-image" /> -->
+				<!-- 								</span> -->
+				<!-- 							</f:facet> -->
+				<!-- 						</p:textEditor> -->
+				<!-- 						<p:commandButton value="Submit" update="display" oncomplete="PF('dlg').show()" icon="fa fa-check" /> -->
+				<!-- 					</h:panelGroup> -->
+				<!-- 				</h:panelGroup> -->
+				<!-- 				<p:dialog header="Content" widgetVar="dlg" showEffect="fade" hideEffect="fade"> -->
+				<!-- 					<p:outputPanel id="display"> -->
+				<!-- 						<h3 style="margin-top: 0">Basic</h3> -->
+				<!-- 						<h:outputText value="#{ebookFormController.genero}" escape="false" /> -->
+				<!-- 					</p:outputPanel> -->
+				<!-- 				</p:dialog> -->
+			</p:fieldset>
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>

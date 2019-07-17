@@ -1,0 +1,28 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui" xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<h:form>
+		<p:panelMenu style="width:100%">
+			<p:submenu label="Cadastros" rendered="#{sessionContext.usuarioLogado.ehAdmin}">
+				<p:menuitem value="Ebook" icon="fa fa-book" outcome="ebook-form" />
+				<p:menuitem value="Usuário" icon="fa fa-user" outcome="usuario-form" />
+			</p:submenu>
+
+			<p:submenu label="Listagem" rendered="#{sessionContext.usuarioLogado.ehAdmin}">
+				<p:menuitem value="Ebook" icon="fa fa-book" outcome="ebook-list" />
+				<p:menuitem value="Usuário" icon="fa fa-user" outcome="usuario-list" />
+			</p:submenu>
+
+			<p:submenu label="Relatórios" rendered="#{sessionContext.usuarioLogado.ehAdmin}">
+				<p:menuitem value="Vendas" icon="fa fa-money" outcome="venda-list" />
+				<p:menuitem value="Relatórios" icon="fa fa-signal" outcome="estatistica" />
+			</p:submenu>
+
+			<p:submenu label="Meus Ebooks">
+				<p:menuitem value="Meus Ebooks" icon="fa fa-book" outcome="meus-ebooks-list" />
+			</p:submenu>
+
+		</p:panelMenu>
+	</h:form>
+
+</ui:composition>

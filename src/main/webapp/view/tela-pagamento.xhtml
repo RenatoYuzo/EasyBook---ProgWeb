@@ -1,0 +1,244 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui" xmlns:c="http://java.sun.com/jsp/jstl/core"
+	template="/WEB-INF/template.xhtml">
+
+	<ui:param name="titulo" value="Pagamento" />
+
+	<ui:define name="corpo">
+		<p:growl showDetail="true" sticky="true">
+			<p:autoUpdate />
+		</p:growl>
+		<!-- 		<f:metadata> -->
+		<!-- 			<f:viewParam name="id" /> -->
+		<!-- 		</f:metadata> -->
+		<!-- 		<f:event listener="#{}" type="preRenderView" /> -->
+
+		<h:form>
+			<c:if test="#{telaPagamentoController.verificaAutenticacaoUsuarioSimplesLogado()}" />
+
+			<h:panelGroup styleClass="ui-sm-12 ui-g">
+				<h:panelGroup styleClass="ui-sm-12 ui-g-12">
+					<p:wizard nextLabel="Próximo" backLabel="Anterior" style="width:70%">
+						<p:tab title="Carrinho">
+							<p:panel header="Seus Ebooks que estão no carrinho!">
+								<!-- 								<p:messages showDetail="true" closable="true"> -->
+								<!-- 									<p:autoUpdate /> -->
+								<!-- 								</p:messages> -->
+								<h:panelGroup styleClass="ui-sm-12 ui-g">
+									<h:panelGroup styleClass="ui-sm-12 ui-g-12">
+										<p:linkButton href="#{url}" icon="fa fa-arrow-left" value="CONTINUAR COMPRANDO" />
+									</h:panelGroup>
+								</h:panelGroup>
+								<h:panelGroup styleClass="ui-sm-12 ui-g">
+									<h:panelGroup styleClass="ui-sm-12 ui-g-12">
+										<p:dataTable id="tabela-Carrinho" value="#{telaPagamentoController.listaCarrinho}" var="ebook" reflow="true" paginator="true"
+											emptyMessage="Seu carrinho está vazio! O que está esperando? Compre um Ebook!" rowKey="#{ebook.id}" sortMode="multiple"
+											paginatorPosition="bottom" rows="100" currentPageReportTemplate="[ Total de Ebooks no carrinho: {totalRecords} ]" nullSortOrder="-1">
+
+											<!-- 						<p:ajax event="rowDblselect" process="@this" listener="#{ebookListController.rowDblselect}" /> -->
+
+											<p:column headerText="Título" style="text-align:center;">
+												<h:outputText value="#{ebook.titulo}" />
+											</p:column>
+											<p:column headerText="Autor" style="text-align:center;">
+												<h:outputText value="#{ebook.autor}" />
+											</p:column>
+											<p:column headerText="Valor" style="text-align:center;">
+												<h:outputText value="#{ebook.preco}" />
+											</p:column>
+											<p:column headerText="Remover" style="text-align:center;" width="50">
+												<p:commandLink rendered="#{ebook.pdfByte ne null}" actionListener="#{telaPagamentoController.removeEbookDoCarrinho(ebook)}" update="@form">
+													<i class="fa fa-trash Fs20 pmLinkFs22" />
+												</p:commandLink>
+											</p:column>
+											<!-- 											<p:column headerText="Capa" style="text-align:center;"> -->
+											<!-- 												<p:graphicImage value="#{ebookListController.byteToImg(ebook.imgByte)}" stream="false" /> -->
+											<!-- 											</p:column> -->
+										</p:dataTable>
+										<p:outputLabel value="Total: R$ #{telaPagamentoController.calculaValorTotal()}" style="float: right;font-size:20px;" />
+									</h:panelGroup>
+								</h:panelGroup>
+
+							</p:panel>
+						</p:tab>
+
+						<p:tab title="Pagamento">
+							<p:panel header="Escolha a forma de pagamento">
+
+								<h:panelGroup styleClass="ui-sm-12 ui-g">
+									<h:panelGroup styleClass="ui-sm-12 ui-g-12">
+										<p:selectOneMenu value="#{telaPagamentoController.formaPagamento}" onchange="rcOnChangeFormaPagamento()" style="width:125px">
+											<f:selectItem itemLabel="Crédito" itemValue="credito" />
+											<f:selectItem itemLabel="Débito" itemValue="debito" />
+											<f:selectItem itemLabel="Boleto" itemValue="boleto" />
+										</p:selectOneMenu>
+									</h:panelGroup>
+								</h:panelGroup>
+
+
+								<p:outputPanel rendered="#{telaPagamentoController.formaPagamento eq 'debito'}">
+									<p:panel header="Débito" style="width:50%">
+										<h:panelGroup styleClass="ui-sm-12 ui-g">
+											<h:panelGroup styleClass="ui-sm-12 ui-g-12 ui-fluid">
+												<p:outputLabel for="input-cartao-debito" value="Número do cartão:" styleClass="FontBold" />
+												<p:inputMask id="input-cartao-debito" value="#{telaPagamentoController.numeroCartaoDebito}" mask="9999.9999.9999.9999" />
+											</h:panelGroup>
+										</h:panelGroup>
+										<h:panelGroup styleClass="ui-sm-12 ui-g">
+											<h:panelGroup styleClass="ui-sm-12 ui-g-4 ui-fluid">
+												<p:outputLabel for="input-mes-cartao-debito" value="Mês:" styleClass="FontBold" />
+												<p:inputNumber placeholder="MM" id="input-mes-cartao-debito" value="#{telaPagamentoController.mesCartaoDebito}" minValue="1" maxValue="12"
+													maxlength="2">
+													<f:convertNumber integerOnly="true" type="number" />
+												</p:inputNumber>
+											</h:panelGroup>
+											<h:panelGroup styleClass="ui-sm-12 ui-g-4 ui-fluid">
+												<p:outputLabel for="input-ano-cartao-debito" value="Ano:" styleClass="FontBold" />
+												<p:inputNumber placeholder="AAAA" id="input-ano-cartao-debito" thousandSeparator="" value="#{telaPagamentoController.anoCartaoDebito}"
+													minValue="1" maxValue="2100" maxlength="4">
+													<f:convertNumber integerOnly="true" type="number" />
+												</p:inputNumber>
+											</h:panelGroup>
+											<h:panelGroup styleClass="ui-sm-12 ui-g-4 ui-fluid">
+												<p:outputLabel for="input-cod-cartao-debito" value="Código de Segurança:" styleClass="FontBold" />
+												<p:inputNumber id="input-cod-cartao-debito" value="#{telaPagamentoController.codigoSegurancaCartaoDebito}" minValue="0" maxValue="999"
+													maxlength="3">
+													<f:convertNumber integerOnly="true" type="number" />
+												</p:inputNumber>
+											</h:panelGroup>
+										</h:panelGroup>
+										<h:panelGroup styleClass="ui-sm-12 ui-g">
+											<h:panelGroup styleClass="ui-sm-12 ui-g-12 ui-fluid">
+												<p:outputLabel for="input-nome-cartao-debito" value="Nome no cartão:" styleClass="FontBold" />
+												<p:inputText id="input-nome-cartao-debito" value="#{telaPagamentoController.nomeCartaoDebito}" />
+											</h:panelGroup>
+										</h:panelGroup>
+										<h:panelGroup styleClass="ui-sm-12 ui-g">
+											<h:panelGroup styleClass="ui-sm-12 ui-g-12 ui-fluid">
+												<p:outputLabel for="input-cpf-cartao-debito" value="CPF:" styleClass="FontBold" />
+												<p:inputMask id="input-cpf-cartao-debito" value="#{telaPagamentoController.cpfCartaoDebito}" mask="999.999.999-99" />
+											</h:panelGroup>
+										</h:panelGroup>
+									</p:panel>
+								</p:outputPanel>
+
+								<p:outputPanel rendered="#{telaPagamentoController.formaPagamento eq 'credito'}">
+									<p:panel header="Crédito" style="width:50%">
+										<h:panelGroup styleClass="ui-sm-12 ui-g">
+											<h:panelGroup styleClass="ui-sm-12 ui-g-12 ui-fluid">
+												<p:outputLabel for="input-cartao-credito" value="Número do cartão:" styleClass="FontBold" />
+												<p:inputMask id="input-cartao-credito" value="#{telaPagamentoController.numeroCartaoCredito}" mask="9999.9999.9999.9999" />
+											</h:panelGroup>
+										</h:panelGroup>
+										<h:panelGroup styleClass="ui-sm-12 ui-g">
+											<h:panelGroup styleClass="ui-sm-12 ui-g-4 ui-fluid">
+												<p:outputLabel for="input-mes-cartao-credito" value="Mês:" styleClass="FontBold" />
+												<p:inputNumber placeholder="MM" id="input-mes-cartao-credito" value="#{telaPagamentoController.mesCartaoCredito}" minValue="1"
+													maxValue="12" maxlength="2">
+													<f:convertNumber integerOnly="true" type="number" />
+												</p:inputNumber>
+											</h:panelGroup>
+											<h:panelGroup styleClass="ui-sm-12 ui-g-4 ui-fluid">
+												<p:outputLabel for="input-ano-cartao-credito" value="Ano:" styleClass="FontBold" />
+												<p:inputNumber placeholder="AAAA" id="input-ano-cartao-credito" thousandSeparator="" value="#{telaPagamentoController.anoCartaoCredito}"
+													minValue="1" maxValue="2100" maxlength="4">
+													<f:convertNumber integerOnly="true" type="number" />
+												</p:inputNumber>
+											</h:panelGroup>
+											<h:panelGroup styleClass="ui-sm-12 ui-g-4 ui-fluid">
+												<p:outputLabel for="input-cod-cartao-credito" value="Código de Segurança:" styleClass="FontBold" />
+												<p:inputNumber id="input-cod-cartao-credito" value="#{telaPagamentoController.codigoSegurancaCartaoCredito}" minValue="0" maxValue="999"
+													maxlength="3">
+													<f:convertNumber integerOnly="true" type="number" />
+												</p:inputNumber>
+											</h:panelGroup>
+										</h:panelGroup>
+										<h:panelGroup styleClass="ui-sm-12 ui-g">
+											<h:panelGroup styleClass="ui-sm-12 ui-g-12 ui-fluid">
+												<p:outputLabel for="input-nome-cartao-credito" value="Nome no cartão:" styleClass="FontBold" />
+												<p:inputText id="input-nome-cartao-credito" value="#{telaPagamentoController.nomeCartaoCredito}" />
+											</h:panelGroup>
+										</h:panelGroup>
+										<h:panelGroup styleClass="ui-sm-12 ui-g">
+											<h:panelGroup styleClass="ui-sm-12 ui-g-12 ui-fluid">
+												<p:outputLabel for="input-cpf-cartao-credito" value="CPF:" styleClass="FontBold" />
+												<p:inputMask id="input-cpf-cartao-credito" value="#{telaPagamentoController.cpfCartaoCredito}" mask="999.999.999-99" />
+											</h:panelGroup>
+										</h:panelGroup>
+									</p:panel>
+								</p:outputPanel>
+
+								<p:outputPanel rendered="#{telaPagamentoController.formaPagamento eq 'boleto'}">
+									<p:panel header="Boleto" style="width:50%">
+										<h:panelGroup styleClass="ui-sm-12 ui-g">
+											<h:panelGroup styleClass="ui-sm-12 ui-g-12">
+												<h1>boleto</h1>
+											</h:panelGroup>
+										</h:panelGroup>
+									</p:panel>
+								</p:outputPanel>
+
+							</p:panel>
+							<p:remoteCommand name="rcOnChangeFormaPagamento" update="@form" />
+						</p:tab>
+
+						<p:tab title="Confirmação">
+							<p:panel header="Confirmação">
+
+								<h:panelGroup styleClass="ui-sm-12 ui-g">
+									<h:panelGroup styleClass="ui-sm-12 ui-g-12">
+										<p:dataTable value="#{telaPagamentoController.listaCarrinho}" var="ebook" reflow="true" paginator="true"
+											emptyMessage="Seu carrinho está vazio! O que está esperando? Compre um Ebook!" rowKey="#{ebook.id}" sortMode="multiple"
+											paginatorPosition="bottom" rows="100" currentPageReportTemplate="[ Total de Ebooks no carrinho: {totalRecords} ]" nullSortOrder="-1">
+
+											<!-- 						<p:ajax event="rowDblselect" process="@this" listener="#{ebookListController.rowDblselect}" /> -->
+
+											<p:column headerText="Título" style="text-align:center;">
+												<h:outputText value="#{ebook.titulo}" />
+											</p:column>
+											<p:column headerText="Autor" style="text-align:center;">
+												<h:outputText value="#{ebook.autor}" />
+											</p:column>
+											<p:column headerText="Valor" style="text-align:center;">
+												<h:outputText value="#{ebook.preco}" />
+											</p:column>
+											<!-- 											<p:column headerText="Capa" style="text-align:center;"> -->
+											<!-- 												<p:graphicImage value="#{ebookListController.byteToImg(ebook.imgByte)}" stream="false" /> -->
+											<!-- 											</p:column> -->
+										</p:dataTable>
+										<p:outputLabel value="Total: R$ #{telaPagamentoController.calculaValorTotal()}" style="font-size:30px;" />
+										<br />
+										<p:outputLabel
+											value="Forma Pagamento: #{telaPagamentoController.formaPagamento eq 'credito' ? 'Cartão de Crédito' : telaPagamentoController.formaPagamento eq 'debito' ? 'Cartão de Débito' : telaPagamentoController.formaPagamento eq 'boleto' ? 'Boleto Bancário' : ''}"
+											style="font-size:30px;" />
+										<br />
+										<p:commandButton value="Finalizar Compra" actionListener="#{telaPagamentoController.actionComprar}" />
+										<!-- 											<p:confirm header="Confirmação" message="Confirma fazer a compra desses Ebooks?" icon="fa fa-question-circle" /> -->
+
+										<!-- 										<p:outputPanel id="idvendido" rendered="#{telaPagamentoController.vendido}"> -->
+										<!-- 											<p:outputLabel value="Compra realizada com sucesso!" styleClass="Fs30" style="margin-left:25px;" /> -->
+										<!-- 											<br /> -->
+										<!-- 											<p:spacer height="45" /> -->
+										<!-- 											<p:outputLabel value="Click aqui para acessar seus Ebooks!" styleClass="Fs20" /> -->
+										<!-- 											<p:commandLink style="margin-left:10px;" styleClass="pmLink"> -->
+										<!-- 												<i class="fa fa-book Fs30" style="color: #339af0;" /> -->
+										<!-- 												<p:outputLabel value="Meus Ebooks" styleClass="Fs20" style="color: #339af0;" /> -->
+										<!-- 											</p:commandLink> -->
+										<!-- 										</p:outputPanel> -->
+									</h:panelGroup>
+								</h:panelGroup>
+
+
+
+
+							</p:panel>
+						</p:tab>
+					</p:wizard>
+				</h:panelGroup>
+			</h:panelGroup>
+
+		</h:form>
+
+
+	</ui:define>
+</ui:composition>

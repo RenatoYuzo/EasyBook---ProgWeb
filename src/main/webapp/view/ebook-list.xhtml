@@ -1,0 +1,75 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui" xmlns:c="http://java.sun.com/jsp/jstl/core"
+	template="/WEB-INF/template.xhtml">
+
+	<ui:param name="titulo" value="Lista de Ebooks" />
+
+	<ui:define name="corpo">
+
+		<h:form>
+			<p:growl id="growl" showDetail="true" sticky="true">
+				<p:autoUpdate />
+			</p:growl>
+
+			<h:panelGroup styleClass="ui-sm-12 ui-g">
+				<h:panelGroup styleClass="ui-sm-12 ui-g-12">
+					<p:dataTable value="#{ebookListController.listaEbooks}" var="ebook" reflow="true" paginator="true" emptyMessage="Nenhum ebook cadastrado."
+						rowKey="#{ebook.id}" rowsPerPageTemplate="5,10,15,25,50,100" sortMode="multiple" paginatorPosition="bottom" rows="5"
+						paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+						currentPageReportTemplate="[ Total de Ebooks: {totalRecords} ]" nullSortOrder="-1">
+
+						<!-- 						<p:ajax event="rowDblselect" process="@this" listener="#{ebookListController.rowDblselect}" /> -->
+
+						<p:column headerText="Título" style="text-align:center;">
+							<h:outputText value="#{ebook.titulo}" />
+						</p:column>
+						<p:column headerText="Editora" style="text-align:center;">
+							<h:outputText value="#{ebook.editora}" />
+						</p:column>
+						<p:column headerText="Resumo" style="text-align:center;">
+							<h:outputText value="#{ebook.resumo}" escape="false" />
+						</p:column>
+						<p:column headerText="Ano" style="text-align:center;">
+							<h:outputText value="#{ebook.ano}" />
+						</p:column>
+						<p:column headerText="Autor" style="text-align:center;">
+							<h:outputText value="#{ebook.autor}" />
+						</p:column>
+						<p:column headerText="Gênero" style="text-align:center;">
+							<h:outputText value="#{ebook.genero}" escape="false" />
+						</p:column>
+						<p:column headerText="Preço" style="text-align:center;">
+							<h:outputText value="#{ebook.preco}" escape="false" />
+						</p:column>
+						<p:column headerText="PDF" style="text-align:center;" width="30">
+							<p:commandLink rendered="#{ebook.pdfByte ne null}" ajax="false" actionListener="#{ebookListController.actionAbrirArquivo(ebook.pdfByte)}"
+								target="_blank">
+								<i class="fa fa-file-pdf-o Fs20  pmLinkFs22"></i>
+							</p:commandLink>
+						</p:column>
+						<!-- 						<p:column headerText="Capa" style="text-align:center;"> -->
+						<!-- 							<p:graphicImage value="#{ebookListController.byteToImg(ebook.imgByte)}" stream="false" /> -->
+						<!-- 						</p:column> -->
+						<p:column headerText="Editar" style="text-align:center;" width="30">
+							<p:link outcome="ebook-form">
+								<i class="fa fa-edit Fs20 pmLinkFs22"></i>
+								<f:param name="id" value="#{ebook.id}" />
+							</p:link>
+						</p:column>
+						<p:column headerText="Excluir" style="text-align:center;" width="30">
+							<p:commandLink action="#{ebookListController.actionDeletar(ebook)}">
+								<i class="fa fa-trash Fs20 pmLinkFs22"></i>
+							</p:commandLink>
+						</p:column>
+						<p:column headerText="aaa" style="text-align:center;" width="30">
+							<p:commandButton actionListener="#{telaPagamentoController.adicionaEbookNoCarrinho(ebook)}" icon="fa fa-cart-plus" />
+						</p:column>
+					</p:dataTable>
+				</h:panelGroup>
+			</h:panelGroup>
+
+		</h:form>
+
+
+	</ui:define>
+</ui:composition>

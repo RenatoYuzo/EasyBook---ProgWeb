@@ -1,0 +1,114 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	template="/WEB-INF/template.xhtml">
+
+	<ui:param name="titulo" value="Estatística de Venda" />
+
+	<ui:define name="corpo">
+		<!-- 		<f:metadata> -->
+		<!-- 			<f:viewParam name="id" /> -->
+		<!-- 		</f:metadata> -->
+		<!-- 		<f:event listener="#{}" type="preRenderView" /> -->
+
+		<h:form>
+
+			<h:panelGroup styleClass="ui-sm-12 ui-g">
+
+				<h:panelGroup styleClass="ui-sm-12 ui-g-3">
+					<p:selectOneMenu
+						value="#{estatisticaListController.tiposRelatorio}"
+						style="width:170px" required="true"
+						requiredMessage="Selecione algum."
+						onchange="rcTiposRelatorioOnChange()">
+						<f:selectItem itemLabel="Nenhum selecionado" itemValue="0" />
+						<f:selectItem itemLabel="Mais Vendidos" itemValue="1" />
+						<f:selectItem itemLabel="Dez últimas vendas" itemValue="4" />
+					</p:selectOneMenu>
+				</h:panelGroup>
+				<p:remoteCommand name="rcTiposRelatorioOnChange" update="@form"
+					actionListener="#{estatisticaListController.rcTiposRelatorioOnChange()}" />
+
+				
+
+				<p:outputPanel rendered="#{estatisticaListController.tiposRelatorio ne 4}">
+					<h:panelGroup styleClass="ui-sm-12 ui-g">
+						<h:panelGroup styleClass="ui-sm-12 ui-g-12">
+							<p:dataTable id="tabela"
+								value="#{estatisticaListController.listaEstatistica}"
+								var="ebook" reflow="true" paginator="true" rowKey="#{ebook.id}"
+								rowsPerPageTemplate="10,15,25,50,100" sortMode="multiple"
+								paginatorPosition="bottom" rows="100"
+								paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+								nullSortOrder="-1">
+
+								<p:column headerText="Título" style="text-align:center;">
+									<h:outputText value="#{ebook.titulo}" />
+								</p:column>
+								<p:column headerText="Editora" style="text-align:center;">
+									<h:outputText value="#{ebook.editora}" />
+								</p:column>
+								<p:column headerText="Resumo" style="text-align:center;">
+									<h:outputText value="#{ebook.resumo}" escape="false" />
+								</p:column>
+								<p:column headerText="Ano" style="text-align:center;">
+									<h:outputText value="#{ebook.ano}" />
+								</p:column>
+								<p:column headerText="Autor" style="text-align:center;">
+									<h:outputText value="#{ebook.autor}" />
+								</p:column>
+								<p:column headerText="Gênero" style="text-align:center;">
+									<h:outputText value="#{ebook.genero}" escape="false" />
+								</p:column>
+								<p:column headerText="Preço" style="text-align:center;">
+									<h:outputText value="#{ebook.preco}" escape="false" />
+								</p:column>
+							</p:dataTable>
+						</h:panelGroup>
+					</h:panelGroup>
+				</p:outputPanel>
+				
+				<p:outputPanel rendered="#{estatisticaListController.tiposRelatorio eq 4}">
+					<h:panelGroup styleClass="ui-sm-12 ui-g" >
+						<h:panelGroup styleClass="ui-sm-12 ui-g-12">
+							<p:dataTable id="tabela2" widgetVar="tabela" value="#{estatisticaListController.listaVenda}" var="v" reflow="true" paginator="true" emptyMessage="Nenhuma venda realizada." rowKey="#{v.id}"
+						rowsPerPageTemplate="10,15,25,50,100" sortMode="multiple" multiViewState="true" paginatorPosition="bottom"
+						paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+						currentPageReportTemplate="[ Total de vendas: {totalRecords} ]" nullSortOrder="-1">
+
+						<p:column headerText="Comprador" style="text-align:center;">
+							<h:outputText value="#{v.nomeComprador}" />
+						</p:column>
+						<p:column headerText="Título Ebook" style="text-align:center;">
+							<h:outputText value="#{v.ebookTitulo}" />
+						</p:column>
+						<p:column headerText="Data Venda" style="text-align:center;">
+							<h:outputText value="#{v.dataVendaFormatada}" />
+						</p:column>
+
+					</p:dataTable>
+						</h:panelGroup>
+					</h:panelGroup>
+				</p:outputPanel>
+
+			</h:panelGroup>
+			
+			<!-- BOTAO FLUTUANTE PARA GERACAO DE EXCEL -->
+			<h:panelGroup id="gerarExcel" style="position: fixed; bottom: 40px; right: 15px; z-index: 999; border-radius: 1em;">
+				<h:commandLink rendered="#{estatisticaListController.tiposRelatorio ne 4}">
+					<img title="Após aplicar os filtros e buscar, exporte para Excel." alt="Gerar Excel" src="#{url}/resources/utils/excel.ico" style="width: 40px; height: 40px" />
+					<p:dataExporter type="xls" target="tabela" fileName="relatório vendas" options="#{EstatisticaListController.excelOpt}" />
+				</h:commandLink>
+				<h:commandLink rendered="#{estatisticaListController.tiposRelatorio eq 4}">
+					<img title="Após aplicar os filtros e buscar, exporte para Excel." alt="Gerar Excel" src="#{url}/resources/utils/excel.ico" style="width: 40px; height: 40px" />
+					<p:dataExporter type="xls" target="tabela2" fileName="relatório vendas" options="#{EstatisticaListController.excelOpt}" />
+				</h:commandLink>
+			</h:panelGroup>
+
+		</h:form>
+
+	</ui:define>
+</ui:composition>

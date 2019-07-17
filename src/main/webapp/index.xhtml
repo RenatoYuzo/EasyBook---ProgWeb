@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+<h:head>
+	<f:facet name="first">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<title>EasyBook</title>
+	</f:facet>
+	<h:outputScript name="js/ripple-effect.js" library="easybook" />
+	<h:outputScript name="js/perfect-scrollbar.js" library="easybook" />
+	<h:outputScript name="js/layout.js" library="easybook" />
+	<h:outputStylesheet library="easybook" name="css/adamantium-core-layout.css" />
+	<h:outputStylesheet library="easybook" name="css/animate.css" />
+	<h:outputStylesheet library="easybook" name="css/adamantium-font.css" />
+	<h:outputStylesheet library="easybook" name="css/ripple-effect.css" />
+	<h:outputStylesheet library="easybook" name="css/perfect-scrollbar.css" />
+	<h:outputStylesheet library="easybook" name="css/font-awesome.css" />
+	<h:outputStylesheet library="easybook" name="css/adamantium-layout.css" />
+	<h:outputStylesheet library="easybook" name="css/index.css" />
+	<link href="https://fonts.googleapis.com/css?family=Lobster" rel="stylesheet" />
+</h:head>
+
+<h:body>
+	<p:growl id="growl" showDetail="true" sticky="true">
+		<p:autoUpdate />
+	</p:growl>
+	<c:if test="#{sessionContext.verificaConexaoBD()}" />
+	<!-- TOPBAR START -->
+	<!-- 	<p:sidebar widgetVar="menu-button" baseZIndex="10000">
+		<h1 style="font-weight: normal">Menu</h1>
+		
+		<p:panelGrid stlyleClass="ui-sm-12 ui-g-12 elem">
+			carrinho
+		</p:panelGrid>
+		<p:panelGrid stlyleClass="ui-sm-12 ui-g-12 elem">
+			perfil
+		</p:panelGrid>
+		
+		
+		<a class="btn-close" onclick="rcKillSession()" href="#{url}/EasyBook/view/login.xhtml">deslogar</a>
+	</p:sidebar> -->
+
+
+	<div id="layout-topbar" style="background-color: #339af0">
+		<!-- <a id="menu-button" class="xk"> <p:commandButton icon="fa fa-bars"
+				style="font-size:30px;color:black; height: 100%; width: 100%; 
+				background-color: red; right: 0; top: 0; botton: 0; left: 0; margin: 0; padding: 0;"
+				oncomplete="PF('menu-button').show()" /> 
+		</a> -->
+		<!-- 		<a href="#{request.contextPath}"> <h:graphicImage name="logo_easybook.png" id="logo" library="utils" /> -->
+		<a href="#{request.contextPath}"> <h:graphicImage name="logo_easybook2.png" id="logo" library="utils" />
+		</a>
+
+		<ul id="top-menu">
+			<li><a class="menulink Animated05 mostrarTexto" onclick="rcVerificaLogin()"> <i class="fa fa-user" style="font-size: 25px; color: black" />
+					<span style="color: black; font-weight: bold; font-size: 20px">#{sessionContext.usuarioLogado.login}</span>
+			</a></li>
+			<li><a class="menulink Animated05 mostrarTexto" href="#{request.contextPath}/view/meus-ebooks-list.xhtml" onclick="rcVerificaLogin()"> <i
+					class="fa fa-book" style="font-size: 25px; color: black" /> <span style="color: black; font-weight: bold; font-size: 20px">Meus Ebooks</span>
+			</a></li>
+			<li><a class="menulink Animated05 mostrarTexto" href="#{request.contextPath}/view/tela-pagamento.xhtml"> <i class="fa fa-shopping-cart"
+					style="font-size: 25px; color: black" /> <span style="color: black; font-weight: bold; font-size: 20px">Carrinho</span>
+			</a></li>
+			<li><a class="menulink Animated05 mostrarTexto" onclick="rcKillSessionIndex()" href="#{url}/EasyBook/view/login.xhtml"> <i
+					class="fa fa-sign-out" style="font-size: 25px; color: black" /> <span style="color: black; font-weight: bold; font-size: 20px">Sair</span>
+			</a> <h:form>
+					<p:remoteCommand name="rcVerificaLogin" actionListener="#{sessionContext.verificaLogin()}" />
+					<p:remoteCommand name="rcKillSessionIndex" actionListener="#{sessionContext.killSession()}" />
+				</h:form></li>
+		</ul>
+
+	</div>
+	<!-- TOPBAR END -->
+
+	<div>
+		<p:graphicImage name="demo/kindle.jpg" styleClass="image-bg" />
+		<div class="over-one"></div>
+	</div>
+
+	<h:panelGroup styleClass="ui-sm-12 ui-g-12 pan-grp pan-2">
+		<p:repeat var="ebook" value="#{indexController.listaEbooks}" varStatus="status">
+			<h:panelGroup styleClass="ui-sm ui-g-3 pan-grp-int">
+				<div class="el-pan-grp">
+					<h:panelGroup styleClass="pan-grp-int-show">
+						<div class="price-show">
+							<div class="price-text">
+								<h:outputText styleClass="main-info" value="R$ #{ebook.preco}" />
+							</div>
+						</div>
+					</h:panelGroup>
+					<f:facet name="header">
+		                Ebook
+			            </f:facet>
+
+					<p:panel header="#{ebook.titulo}" style="text-align:center">
+						<h:panelGrid columns="1" style="width:100%">
+							<h:form>
+								<p:graphicImage styleClass="image-conf" value="#{indexController.byteToImg(ebook.imgByte)}" stream="false" />
+								<div class="dist">
+									<h:outputText styleClass="main-info" value="#{ebook.autor}" /> <br/>
+									<h:outputText value="editora: #{ebook.editora}" /> <br/>
+									<h:outputText style="margin-botton: 20px" value="ano de publicação: #{ebook.ano}" /><br/>
+								</div>
+								<div class="ui-sm-12 ui-g ui-fluid">
+									<div class="ui-sm-12 ui-g-12">
+										<p:commandButton id="btn-visualizar01" value="visualizar" icon="fa fa-eye" styleClass="btn-visualizar" />
+									</div>
+									<div class="ui-sm-12 ui-g-12">
+										<p:commandButton value="carrinho" icon="fa fa-shopping-cart" styleClass="btn-visualizar"
+											actionListener="#{telaPagamentoController.adicionaEbookNoCarrinho(ebook)}" />
+									</div>
+								</div>
+								<p:remoteCommand name="rcSalvaEbook" action="#{indexController.salvaEbook(ebook)}" update="viewEbook" />
+								<!-- 							<div class="dist"> -->
+								<!-- 								<h:outputText styleClass="main-info" value="#{ebook.autor}" /> -->
+								<!-- 								<h:outputText value="editora: #{ebook.editora}" /> -->
+								<!-- 								<h:outputText style="margin-botton: 20px" value="ano de publicação: #{ebook.ano}" /> -->
+								<!-- 							</div> -->
+								<!-- 								<p:commandButton id="btn-visualizar01" value="visualizar" icon="fa fa-eye" styleClass="btn-visualizar" onstart="rcSalvaEbook()" -->
+								<!-- 									oncomplete="PF('ebookDialog').show()"> -->
+								<!-- 								</p:commandButton> -->
+
+
+								<p:tooltip for="btn-visualizar01" showEvent="focus" hideEvent="blur">
+									<p:outputPanel style="text-align:center;" layout="block">
+										<p:panel>
+
+											<f:facet styleClass="dialog-style" name="header">
+												<h:outputText value="#{ebook.titulo}" styleClass="Fs25" />
+												<br />
+												<p:graphicImage styleClass="image-conf" value="#{indexController.byteToImg(ebook.imgByte)}" stream="false" />
+											</f:facet>
+
+											<div class="ui-sm-12 ui-g ui-fluid">
+												<h:outputText value="Título:  " style="font-weight:bold;" />
+												<h:outputText value="#{ebook.titulo}" />
+											</div>
+											<h:panelGrid>
+												<h:outputText value="Autor:  " style="font-weight:bold;" />
+												<h:outputText value="#{ebook.autor}" />
+
+												<h:outputText value="Editora:  " style="font-weight:bold;" />
+												<h:outputText value="#{ebook.editora}" />
+
+												<h:outputText value="Gênero:  " style="font-weight:bold;" />
+												<h:outputText value="#{ebook.genero}" />
+
+												<h:outputText value="Ano Publicação:  " style="font-weight:bold;" />
+												<h:outputText value="#{ebook.ano}" />
+
+												<h:outputText value="Preço:  " style="font-weight:bold;" />
+												<h:outputText value="R$ #{ebook.preco}" />
+												
+												<h:outputText value="Resumo do Ebook:  " style="font-weight:bold;" />
+												<p:scrollPanel style="width:100%;height:80px">
+													<h:outputText style="height:30px" value="#{ebook.resumo}" escape="false" />
+												</p:scrollPanel>
+											</h:panelGrid>
+										</p:panel>
+									</p:outputPanel>
+								</p:tooltip>
+
+								<p:dialog id="dialogId" styleClass="dialog-style" header="Detalhe do Livro" widgetVar="ebookDialog" modal="true" showEffect="fade"
+									hideEffect="fade" resizable="false">
+									<p:outputPanel id="viewEbook" style="text-align:center;" layout="block">
+										<p:panel>
+
+											<f:facet styleClass="dialog-style" name="header">
+												<p:graphicImage styleClass="image-conf" value="#{indexController.byteToImg(ebook.imgByte)}" stream="false" />
+											</f:facet>
+
+											<div class="ui-sm-12 ui-g ui-fluid">
+												<h:outputText value="Autor:  " style="font-weight:bold;" />
+												<h:outputText value="#{indexController.selectedBook.autor}" />
+											</div>
+											<div class="ui-sm-12 ui-g ui-fluid">
+												<h:outputText value="Título:  " style="font-weight:bold;" />
+												<h:outputText value="#{indexController.selectedBook.titulo}" />
+											</div>
+											<div class="ui-sm-12 ui-g ui-fluid">
+												<h:outputText value="Editora:  " style="font-weight:bold;" />
+												<h:outputText value="#{indexController.selectedBook.editora}" />
+											</div>
+											<div class="ui-sm-12 ui-g ui-fluid">
+												<h:outputText value="Gênero:  " style="font-weight:bold;" />
+												<h:outputText value="#{indexController.selectedBook.genero}" />
+											</div>
+											<div class="ui-sm-12 ui-g ui-fluid">
+												<h:outputText value="Ano Publicação:  " style="font-weight:bold;" />
+												<h:outputText value="#{indexController.selectedBook.ano}" />
+											</div>
+											<div class="ui-sm-12 ui-g ui-fluid">
+												<h:outputText value="Resumo do Ebook:  " style="font-weight:bold;" />
+												<p:scrollPanel style="width:100%;height:120px">
+													<h:outputText style="height:80px" value="#{indexController.selectedBook.resumo}" escape="false" />
+												</p:scrollPanel>
+											</div>
+
+										</p:panel>
+										<p:commandButton style="font-size:20px" value="Adicionar ao carrinho" icon="fa fa-shopping-cart" styleClass="btn-car" />
+									</p:outputPanel>
+								</p:dialog>
+							</h:form>
+
+						</h:panelGrid>
+					</p:panel>
+				</div>
+
+			</h:panelGroup>
+		</p:repeat>
+	</h:panelGroup>
+</h:body>
+</html>
+
+
+<!-- <p:overlayPanel id="moviePanel" for="btn-visualizar" hideEffect="fade" dynamic="true" style="width:600px" modal="true" 
+	    								hideEvent="mouseout"> -->

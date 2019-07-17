@@ -1,0 +1,67 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui" xmlns:c="http://java.sun.com/jsp/jstl/core"
+	template="/WEB-INF/template.xhtml">
+
+	<ui:param name="titulo" value="Cadastro de Usuário" />
+
+	<ui:define name="corpo">
+		<f:metadata>
+			<f:viewParam name="id" value="#{usuarioFormController.usuario}" converter="#{entityConverter}" />
+		</f:metadata>
+		<f:event listener="#{usuarioFormController.onload}" type="preRenderView" />
+
+		<h:form>
+			<p:fieldset legend="Cadastro de Usuário" style="margin-bottom:30px">
+
+				<h:panelGroup styleClass="ui-sm-12 ui-g">
+					<h:panelGroup styleClass="ui-sm-12 ui-g-3">
+						<p:inputText id="nome-input" placeholder="Nome Completo" value="#{usuarioFormController.nomeCompleto}" style="width:100%" />
+					</h:panelGroup>
+					<h:panelGroup styleClass="ui-sm-12 ui-g-3">
+						<p:inputMask mask="999.999.999-99" placeholder="CPF" style="width:100%" value="#{usuarioFormController.cpf}" />
+					</h:panelGroup>
+				</h:panelGroup>
+				<h:panelGroup styleClass="ui-sm-12 ui-g">
+					<h:panelGroup styleClass="ui-sm-12 ui-g-6">
+						<p:inputText id="endereco-input" placeholder="Endereço" style="width:100%" value="#{usuarioFormController.endereco}" />
+					</h:panelGroup>
+				</h:panelGroup>
+				<h:panelGroup styleClass="ui-sm-12 ui-g">
+					<h:panelGroup styleClass="ui-sm-12 ui-g-3">
+						<p:inputMask mask="(99) 99999-9999" placeholder="Telefone" style="width:100%" value="#{usuarioFormController.telefone}" />
+					</h:panelGroup>
+					<h:panelGroup styleClass="ui-sm-12 ui-g-3">
+						<p:inputMask mask="(99) 99999-9999" placeholder="Celular" style="width:100%" value="#{usuarioFormController.celular}" />
+					</h:panelGroup>
+				</h:panelGroup>
+				<h:panelGroup styleClass="ui-sm-12 ui-g">
+					<h:panelGroup styleClass="ui-sm-12 ui-g-3">
+						<p:inputText id="usuario-input" placeholder="Login" style="width:100%" value="#{usuarioFormController.login}" />
+					</h:panelGroup>
+					<h:panelGroup styleClass="ui-sm-12 ui-g-3">
+						<p:password id="senha" feedback="true" placeholder="Senha" style="width:100%" value="#{usuarioFormController.senha}" />
+					</h:panelGroup>
+				</h:panelGroup>
+				<h:panelGroup styleClass="ui-sm-12 ui-g" rendered="#{sessionContext.usuarioLogado.ehAdmin eq true}">
+					<h:panelGroup styleClass="ui-sm-12 ui-g-12">
+						<p:outputLabel value="É Admin?  " for="sbb-ehadmin" />
+						<p:selectBooleanButton id="sbb-ehadmin" value="#{usuarioFormController.ehAdmin}" onLabel="Sim" offLabel="Não" onIcon="fa fa-check"
+							offIcon="fa fa-times" />
+					</h:panelGroup>
+				</h:panelGroup>
+				<h:panelGroup styleClass="ui-sm-12 ui-g">
+					<h:panelGroup styleClass="ui-sm-12 ui-g-12">
+						<p:commandButton value="Cadastrar" icon="fa fa-user-plus" actionListener="#{usuarioFormController.actionCadastrar()}"
+							rendered="#{usuarioFormController.id eq null}" />
+						<p:commandButton value="Atualizar" icon="fa fa-save" actionListener="#{usuarioFormController.actionAtualizar()}"
+							rendered="#{usuarioFormController.id ne null}" />
+					</h:panelGroup>
+				</h:panelGroup>
+
+			</p:fieldset>
+
+		</h:form>
+
+
+	</ui:define>
+</ui:composition>
